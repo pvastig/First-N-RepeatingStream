@@ -1,9 +1,9 @@
 #include "utils.h"
 
+#include <algorithm>
 #include <array>
 #include <cassert>
 #include <iostream>
-#include <list>
 #include <memory>
 #include <string>
 #include <string_view>
@@ -21,16 +21,17 @@ public:
         ++mCharCount[code];
         // Remember input chars
         if (const int count = mCharCount[code]; count <= mN)
-            mInputChars.emplace_back(c);
+            mInputChars.emplace_back(code);
         else
-            mInputChars.remove(c);
+            mInputChars.erase(std::remove(mInputChars.begin(), mInputChars.end(), code),
+                              mInputChars.end());
         return !mInputChars.empty() ? mInputChars.front() : '0';
     }
 
 private:
     const int mN = 0;
     std::array<int, 255> mCharCount = {0};
-    std::list<char> mInputChars;
+    std::vector<char> mInputChars;
 };
 
 std::string ConvertInput(const int N, std::string_view input)
