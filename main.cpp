@@ -1,3 +1,5 @@
+#include "utils.h"
+
 #include <array>
 #include <cassert>
 #include <iostream>
@@ -6,8 +8,6 @@
 #include <string>
 #include <string_view>
 #include <vector>
-
-using namespace std;
 
 class FirstNRepeatingStream
 {
@@ -29,14 +29,14 @@ public:
 
 private:
     const int mN = 0;
-    array<int, 255> mCharCount = {0};
-    list<char> mInputChars;
+    std::array<int, 255> mCharCount = {0};
+    std::list<char> mInputChars;
 };
 
-string ConvertInput(const int N, string_view input)
+std::string ConvertInput(const int N, std::string_view input)
 {
     FirstNRepeatingStream fs(N);
-    string out;
+    std::string out;
     out.reserve(input.length());
     for (auto ch : input)
         out.push_back(fs.next(ch));
@@ -131,19 +131,123 @@ struct test5 : Test
     }
 };
 
+struct perfomance_test1 : Test
+{
+    void run() const override
+    {
+        auto out = ConvertInput(
+            1,
+            "bcfbfcbccfccbbgkhkkgloyptyptyiovneutyoyjgjfjdjjfgjfkjdhmnbbbbbvcvcbfgdfhhtfhgfdsfsdfdf"
+            "dgfdgfhfhpoyoprteoiiiiiiiiiiiaaaaaaaaaaaekkkkvkkkvkvkfgkfjkfjhkfjhkgjhjhkhjkgjlfghklfg"
+            "khljgfhjfhjlkfgjhrtueryhuhqqwewqewretretretkkfjhklgjhurhgjfjhgjfhjfhjjfjljldfjglkdfjgl"
+            "kdfjklvbbcccccccccccxxxxxxxxxxxxxqqqqqqqqqqqjjjdfhjkdhgkjfdhgt");
+        assert(
+            out
+            == "bbbcc000000000ggggghhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhlllllllllllllllllllllllllllll"
+               "llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllluu"
+               "uuuuuuuuuuuuuuuuuuuuuuuuummmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm"
+               "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm");
+    }
+};
+
+struct perfomance_test2 : Test
+{
+    void run() const override
+    {
+        auto out = ConvertInput(
+            2,
+            "bcfbfcbccfccbbgkhkkgloyptyptyiovneutyoyjgjfjdjjfgjfkjdhmnbbbbbvcvcbfgdfhhtfhgfdsfsdfdf"
+            "dgfdgfhfhpoyoprteoiiiiiiiiiiiaaaaaaaaaaaekkkkvkkkvkvkfgkfjkfjhkfjhkgjhjhkhjkgjlfghklfg"
+            "khljgfhjfhjlkfgjhrtueryhuhqqwewqewretretretkkfjhklgjhurhgjfjhgjfhjfhjjfjljldfjglkdfjgl"
+            "kdfjklvbbcccccccccccxxxxxxxxxxxxxqqqqqqqqqqqjjjdfhjkdhgkjfdhgt");
+        assert(
+            out
+            == "bbbbbbcff00000gggggggggggggggggggggggggghhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhllllllllllll"
+               "lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll"
+               "lllnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn"
+               "nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn");
+    }
+};
+
+struct perfomance_test3 : Test
+{
+    void run() const override
+    {
+        auto out = ConvertInput(
+            3,
+            "bcfbfcbccfccbbgkhkkgloyptyptyiovneutyoyjgjfjdjjfgjfkjdhmnbbbbbvcvcbfgdfhhtfhgfdsfsdfdf"
+            "dgfdgfhfhpoyoprteoiiiiiiiiiiiaaaaaaaaaaaekkkkvkkkvkvkfgkfjkfjhkfjhkgjhjhkhjkgjlfghklfg"
+            "khljgfhjfhjlkfgjhrtueryhuhqqwewqewretretretkkfjhklgjhurhgjfjhgjfhjfhjjfjljldfjglkdfjgl"
+            "kdfjklvbbcccccccccccxxxxxxxxxxxxxqqqqqqqqqqqjjjdfhjkdhgkjfdhgt");
+        assert(
+            out
+            == "bbbbbbbbbbbbffffffffffffffffffffffffffffffggggggkkkhhhhhhhhhhhhhhhhhhhhhlllllllllll"
+               "lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll"
+               "llllllllnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn"
+               "nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn");
+    }
+};
+
+struct perfomance_test4 : Test
+{
+    void run() const override
+    {
+        auto out = ConvertInput(
+            3,
+            "bcfbfcbccfccbbgkhkkgloyptyptyiovneutyoyjgjfjdjjfgjfkjdhmnbbbbbvcvcbfgdfhhtfhgfdsfsdfdf"
+            "dgfdgfhfhpoyoprteoiiiiiiiiiiiaaaaaaaaaaaekkkkvkkkvkvkfgkfjkfjhkfjhkgjhjhkhjkgjlfghklfg"
+            "khljgfhjfhjlkfgjhrtueryhuhqqwewqewretretretkkfjhklgjhurhgjfjhgjfhjfhjjfjljldfjglkdfjgl"
+            "kdfjklvbbcccccccccccxxxxxxxxxxxxxqqqqqqqqqqqjjjdfhjkdhgkjfdhgt");
+        assert(
+            out
+            == "bbbbbbbbbbbbffffffffffffffffffffffffffffffggggggkkkhhhhhhhhhhhhhhhhhhhhhlllllllllll"
+               "lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll"
+               "llllllllnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn"
+               "nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn");
+    }
+};
+
+struct perfomance_test5 : Test
+{
+    void run() const override
+    {
+        auto out = ConvertInput(
+            10,
+            "bcfbfcbccfccbbgkhkkgloyptyptyiovneutyoyjgjfjdjjfgjfkjdhmnbbbbbvcvcbfgdfhhtfhgfdsfsdfdf"
+            "dgfdgfhfhpoyoprteoiiiiiiiiiiiaaaaaaaaaaaekkkkvkkkvkvkfgkfjkfjhkfjhkgjhjhkhjkgjlfghklfg"
+            "khljgfhjfhjlkfgjhrtueryhuhqqwewqewretretretkkfjhklgjhurhgjfjhgjfhjfhjjfjljldfjglkdfjgl"
+            "kdfjklvbbcccccccccccxxxxxxxxxxxxxqqqqqqqqqqqjjjdfhjkdhgkjfdhgt");
+        assert(
+            out
+            == "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbccccccccccccccccc"
+               "ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+               "ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+               "ccccccccccccccccccccooooooooooooooooooooooooooooooooooooooooooooooooooo");
+    }
+};
+
 int main()
 {
     std::vector<std::unique_ptr<Test>> tests;
-    tests.reserve(5);
     tests.push_back(std::make_unique<test1>());
     tests.push_back(std::make_unique<test2>());
     tests.push_back(std::make_unique<test3>());
     tests.push_back(std::make_unique<test4>());
     tests.push_back(std::make_unique<test5>());
+    tests.push_back(std::make_unique<perfomance_test1>());
+    tests.push_back(std::make_unique<perfomance_test2>());
+    tests.push_back(std::make_unique<perfomance_test3>());
+    tests.push_back(std::make_unique<perfomance_test4>());
+    tests.push_back(std::make_unique<perfomance_test5>());
 
+    size_t count = 0;
     for (const auto& item : tests) {
+        std::cout << "Test " << ++count << ": ";
+        Timer t;
+        t.start();
         item->run();
+        t.stop();
+        std::cout << "duration: " << t.duration() << "\n";
     }
-
     return 0;
 }
