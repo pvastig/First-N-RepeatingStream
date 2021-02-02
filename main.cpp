@@ -12,7 +12,7 @@
 class FirstNRepeatingStream
 {
 public:
-    explicit FirstNRepeatingStream(int N) : mN(N) {}
+    explicit FirstNRepeatingStream(int N) : mN(N) { mInputChars.reserve(255); }
 
     char next(char c)
     {
@@ -20,10 +20,12 @@ public:
         const int code = c;
         ++mCharCount[code];
         // Remember input chars
-        if (const int count = mCharCount[code]; count <= mN)
-            mInputChars.emplace_back(code);
-        else
-            mInputChars.erase(std::remove(mInputChars.begin(), mInputChars.end(), code),
+        if (const int count = mCharCount[code]; count <= mN) {
+            if (const auto found = std::find(mInputChars.cbegin(), mInputChars.cend(), c);
+                found == mInputChars.cend())
+                mInputChars.emplace_back(code);
+        } else
+            mInputChars.erase(std::remove(mInputChars.begin(), mInputChars.end(), c),
                               mInputChars.end());
         return !mInputChars.empty() ? mInputChars.front() : '0';
     }
@@ -227,6 +229,17 @@ struct perfomance_test5 : Test
     }
 };
 
+struct perfomance_test6 : Test
+{
+    void run() const override
+    {
+        FirstNRepeatingStream fs(1000000000);
+        for (int i = 0; i < 1000000000; i++) {
+            fs.next('a');
+        }
+    }
+};
+
 int main()
 {
     std::vector<std::unique_ptr<Test>> tests;
@@ -240,6 +253,7 @@ int main()
     tests.push_back(std::make_unique<perfomance_test3>());
     tests.push_back(std::make_unique<perfomance_test4>());
     tests.push_back(std::make_unique<perfomance_test5>());
+    tests.push_back(std::make_unique<perfomance_test6>());
 
     size_t count = 0;
     for (const auto& item : tests) {
