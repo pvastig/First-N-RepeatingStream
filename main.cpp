@@ -12,10 +12,12 @@
 class FirstNRepeatingStream
 {
 public:
-    explicit FirstNRepeatingStream(int N) : mN(N) { mInputChars.reserve(255); }
+    explicit FirstNRepeatingStream(int N) : mN(N) { mInputChars.reserve(mCharCount.size()); }
 
     char next(char c)
     {
+        if (mN <= 0)
+            return '0';
         // Count chars
         const int code = c;
         ++mCharCount[code];
@@ -240,6 +242,23 @@ struct perfomance_test6 : Test
     }
 };
 
+struct invalid_data_test : Test
+{
+    void run() const override
+    {
+        {
+            FirstNRepeatingStream fs(0);
+            char c = fs.next('a');
+            assert(c == '0');
+        }
+        {
+            FirstNRepeatingStream fs(-10);
+            char c = fs.next('a');
+            assert(c == '0');
+        }
+    }
+};
+
 int main()
 {
     std::vector<std::unique_ptr<Test>> tests;
@@ -254,6 +273,7 @@ int main()
     tests.push_back(std::make_unique<perfomance_test4>());
     tests.push_back(std::make_unique<perfomance_test5>());
     tests.push_back(std::make_unique<perfomance_test6>());
+    tests.push_back(std::make_unique<invalid_data_test>());
 
     size_t count = 0;
     for (const auto& item : tests) {
